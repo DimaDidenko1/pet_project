@@ -17,8 +17,23 @@ services:
       image: postgres:15
       container_name: docker_database
       environment:
-        POSTGRES_USER: admin
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: mydb
+        POSTGRES_USER: app
+        POSTGRES_PASSWORD: app
+        POSTGRES_DB: appdb
       ports:
         - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:
