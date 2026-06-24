@@ -42,3 +42,5 @@ services:
         - backend
 volumes:
   pgdata:
+env_file:
+  - .env
