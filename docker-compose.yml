@@ -13,6 +13,12 @@ services:
     container_name: backend
     ports:
       - "8000:8000"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   db:
       image: postgres:15
       container_name: docker_database
@@ -34,6 +40,5 @@ services:
       depends_on:
         - frontend
         - backend
-
 volumes:
   pgdata:
