@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
@@ -17,6 +17,15 @@ def get_db():
         user="app",
         password="app"
     )
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # для dev ок
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/api/todos")
 def get_todos():
