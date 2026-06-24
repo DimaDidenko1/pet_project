@@ -14,7 +14,7 @@ const html = `
 
     <script>
         async function loadTodos() {
-            const res = await fetch("/api/todos");
+            const res = await fetch("http://localhost:8000/api/todos");
             const data = await res.json();
 
             const list = document.getElementById("list");

@@ -1,25 +1,22 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import psycopg2
 
 app = FastAPI()
 
-origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/api/health")
-def health():
-    return {"status": "ok"}
+def get_db():
+    return psycopg2.connect(
+        host="db",
+        database="appdb",
+        user="app",
+        password="app"
+    )
 
 @app.get("/api/todos")
 def get_todos():
-    return [
-        {"id": 1, "text": "Learn DevOps"},
-        {"id": 2, "text": "Build pet project"}
-    ]
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT id, text FROM todos;")
+    rows = cur.fetchall()
+
+    return [{"id": r[0], "text": r[1]} for r in rows]
