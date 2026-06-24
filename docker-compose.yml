@@ -30,6 +30,8 @@ services:
         - "5432:5432"
       volumes:
         - pgdata:/var/lib/postgresql/data
+      env_file:
+        - .env
   nginx:
       image: nginx:alpine
       container_name: nginx
@@ -40,7 +42,8 @@ services:
       depends_on:
         - frontend
         - backend
+  
+
 volumes:
   pgdata:
-env_file:
-  - .env
+  
