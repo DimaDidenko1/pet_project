@@ -1,0 +1,41 @@
+- hosts: web
+  become: yes
+  var_files:
+    - secrets.yml
+  tasks:
+
+    - name: Create .env file
+      copy:
+        dest: /home/vagrant/app/.env
+        content: |
+          POSTGRES_HOST=db
+          POSTGRES_DB={{ postgres_db }}
+          POSTGRES_USER={{ postgres_user }}
+          POSTGRES_PASSWORD={{ postgres_password }}
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Install docker compose
+      apt:
+        name: docker-compose
+        state: present
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Clone project
+      git:
+        repo: https://github.com/DimaDidenko1/pet_project.git
+        dest: /home/vagrant/app
+
+    - name: Run docker-compose
+      command: docker-compose up -d
+      args:
+        chdir: /home/vagrant/app
